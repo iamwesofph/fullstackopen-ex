@@ -1,35 +1,45 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
 
-function App() {
-  const [count, setCount] = useState(0)
+const Button = ({ handleClick, text }) => <button onClick={handleClick}>{text}</button>;
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+const Feedback = ({ handleClickGood, handleClickNeutral, handleClickBad }) => {
+    return (
+        <>
+            <h1>Give Feedback</h1>
+            <Button handleClick={handleClickGood} text="Good"></Button>
+            <Button handleClick={handleClickNeutral} text="Neutral"></Button>
+            <Button handleClick={handleClickBad} text="Bad"></Button>
+        </>
+    );
+};
 
-export default App
+const Statistics = ({ good, neutral, bad }) => {
+    return (
+        <>
+            <h1>Statistics</h1>
+            <p>Good {good}</p>
+            <p>Neutral {neutral}</p>
+            <p>Bad {bad}</p>
+        </>
+    );
+};
+
+const App = () => {
+    // save clicks of each button to its own state
+    const [good, setGood] = useState(0);
+    const [neutral, setNeutral] = useState(0);
+    const [bad, setBad] = useState(0);
+
+    const handleClickGood = () => setGood(good + 1);
+    const handleClickNeutral = () => setNeutral(neutral + 1);
+    const handleClickBad = () => setBad(bad + 1);
+
+    return (
+        <>
+            <Feedback handleClickGood={handleClickGood} handleClickNeutral={handleClickNeutral} handleClickBad={handleClickBad}></Feedback>
+            <Statistics good={good} neutral={neutral} bad={bad}></Statistics>
+        </>
+    );
+};
+
+export default App;
