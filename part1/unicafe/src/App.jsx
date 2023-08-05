@@ -17,17 +17,22 @@ const Statistics = ({ good, neutral, bad }) => {
     const total = good + bad + neutral;
     const average = (good - bad) / total;
     const positive = (good / total) * 100;
-    return (
-        <>
-            <h1>Statistics</h1>
-            <p>Good {good}</p>
-            <p>Neutral {neutral}</p>
-            <p>Bad {bad}</p>
-            <p>All {total}</p>
-            <p>Average {average}</p>
-            <p>Positive {positive}%</p>
-        </>
-    );
+
+    if (total === 0) {
+        return <p>No feedback yet</p>;
+    } else {
+        return (
+            <>
+                <h1>Statistics</h1>
+                <p>Good {good}</p>
+                <p>Neutral {neutral}</p>
+                <p>Bad {bad}</p>
+                <p>All {total}</p>
+                <p>Average {average}</p>
+                <p>Positive {positive}%</p>
+            </>
+        );
+    }
 };
 
 const App = () => {
