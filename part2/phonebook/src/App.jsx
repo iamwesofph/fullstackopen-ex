@@ -1,5 +1,43 @@
 import { useState } from "react";
 
+const Filter = ({ handleChangeSearch, search }) => {
+    return (
+        <div>
+            Search: <input type="text" onChange={handleChangeSearch} value={search} />
+        </div>
+    );
+};
+
+const PersonForm = ({ newName, newNumber, handleChangeName, handleChangeNumber, handleSubmit }) => {
+    return (
+        <form>
+            <div>
+                Name: <input type="text" onChange={handleChangeName} value={newName} />
+            </div>
+            <div>
+                Number: <input type="text" onChange={handleChangeNumber} value={newNumber} />
+            </div>
+            <div>
+                <button type="submit" onClick={handleSubmit}>
+                    Add
+                </button>
+            </div>
+        </form>
+    );
+};
+
+const Persons = ({ persons, search }) => {
+    const personsToShow = persons.filter((person) => person.name.includes(search));
+
+    return (
+        <ul>
+            {personsToShow.map((person, index) => {
+                return <li key={index}>{`${person.name} ${person.number}`}</li>;
+            })}
+        </ul>
+    );
+};
+
 const initialPersons = [
     { name: "Arto Hellas", number: "040-123456", id: 1 },
     { name: "Ada Lovelace", number: "39-44-5323523", id: 2 },
@@ -37,40 +75,20 @@ const App = () => {
         if (existingPerson) {
             alert(`${newName} is already added to phonebook`);
         } else {
+            alert("new person created");
             setPersons([...persons, newPerson]);
             setNewName("");
             setNewNumber("");
         }
     };
 
-    const personsToShow = persons.filter((person) => person.name.includes(search));
-
     return (
         <div>
             <h2>Phonebook</h2>
-            <form>
-                <div>
-                    Search: <input type="text" onChange={handleChangeSearch} value={search} />
-                </div>
-                <div>
-                    Name: <input type="text" onChange={handleChangeName} value={newName} />
-                </div>
-                <div>
-                    Number: <input type="text" onChange={handleChangeNumber} value={newNumber} />
-                </div>
-                <div>
-                    <button type="submit" onClick={handleSubmit}>
-                        Add
-                    </button>
-                </div>
-            </form>
-
+            <Filter handleChangeSearch={handleChangeSearch} search={search} />
+            <PersonForm newName={newName} newNumber={newNumber} handleChangeName={handleChangeName} handleChangeNumber={handleChangeNumber} handleSubmit={handleSubmit} />
             <h2>Numbers</h2>
-            <ul>
-                {personsToShow.map((person, index) => {
-                    return <li key={index}>{`${person.name} ${person.number}`}</li>;
-                })}
-            </ul>
+            <Persons persons={persons} search={search} />
         </div>
     );
 };
