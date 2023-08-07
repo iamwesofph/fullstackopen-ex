@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect } from "react";
 import axios from "axios";
+import personService from "./services/persons";
 
 const Filter = ({ handleChangeSearch, search }) => {
     return (
@@ -10,9 +11,9 @@ const Filter = ({ handleChangeSearch, search }) => {
     );
 };
 
-const PersonForm = ({ newName, newNumber, handleChangeName, handleChangeNumber, handleSubmit }) => {
+const PersonForm = ({ newName, newNumber, handleChangeName, handleChangeNumber, addPerson }) => {
     return (
-        <form>
+        <form onSubmit={addPerson}>
             <div>
                 Name: <input type="text" onChange={handleChangeName} value={newName} />
             </div>
@@ -20,9 +21,7 @@ const PersonForm = ({ newName, newNumber, handleChangeName, handleChangeNumber, 
                 Number: <input type="text" onChange={handleChangeNumber} value={newNumber} />
             </div>
             <div>
-                <button type="submit" onClick={handleSubmit}>
-                    Add
-                </button>
+                <button type="submit">Add</button>
             </div>
         </form>
     );
@@ -56,12 +55,23 @@ const App = () => {
     useEffect(() => {
         console.log("effect");
         axios.get("http://localhost:3001/persons").then((response) => {
-            console.log("promise fulfilled");
             setPersons(response.data);
         });
     }, []);
 
-    console.log("render", persons.length, "persons");
+    const addPerson = (event) => {
+        event.preventDefault();
+        const personObject = {
+            name: newName,
+            number: newNumber,
+        };
+
+        personService.create(personObject).then((returnedPerson) => {
+            setPersons(persons.concat(returnedPerson));
+            setNewName("");
+            setNewNumber("");
+        });
+    };
 
     const handleChangeName = (event) => {
         setNewName(event.target.value);
@@ -75,29 +85,29 @@ const App = () => {
         setSearch(event.target.value);
     };
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        const newPerson = {
-            name: newName,
-            number: newNumber,
-        };
+    // const handleSubmit = (event) => {
+    //     event.preventDefault();
+    //     const newPerson = {
+    //         name: newName,
+    //         number: newNumber,
+    //     };
 
-        const existingPerson = persons.find((person) => person.name === newPerson.name);
+    //     const existingPerson = persons.find((person) => person.name === newPerson.name);
 
-        if (existingPerson) {
-            alert(`${newName} is already added to phonebook`);
-        } else {
-            setPersons([...persons, newPerson]);
-            setNewName("");
-            setNewNumber("");
-        }
-    };
+    //     if (existingPerson) {
+    //         alert(`${newName} is already added to phonebook`);
+    //     } else {
+    //         setPersons([...persons, newPerson]);
+    //         setNewName("");
+    //         setNewNumber("");
+    //     }
+    // };
 
     return (
         <div>
             <h2>Phonebook</h2>
             <Filter handleChangeSearch={handleChangeSearch} search={search} />
-            <PersonForm newName={newName} newNumber={newNumber} handleChangeName={handleChangeName} handleChangeNumber={handleChangeNumber} handleSubmit={handleSubmit} />
+            <PersonForm newName={newName} newNumber={newNumber} handleChangeName={handleChangeName} handleChangeNumber={handleChangeNumber} addPerson={addPerson} />
             <h2>Numbers</h2>
             <Persons persons={persons} search={search} />
         </div>
