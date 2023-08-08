@@ -77,13 +77,23 @@ const App = () => {
         const existingPerson = persons.find((person) => person.name === newName);
         if (existingPerson) {
             if (window.confirm(`${newName} is already added to phonebook, replace old number with a new one?`) === true) {
-                personService.update(existingPerson.id, personObject).then((returnedPerson) => {
-                    setPersons(persons.map((person) => (person.id !== existingPerson.id ? person : returnedPerson)));
-                    setErrorMessage(`Successfully updated ${returnedPerson.name}'s, phone number.`);
-                    setTimeout(() => {
-                        setErrorMessage(null);
-                    }, 5000);
-                });
+                personService
+                    .update(existingPerson.id, personObject)
+                    .then((returnedPerson) => {
+                        setPersons(persons.map((person) => (person.id !== existingPerson.id ? person : returnedPerson)));
+                        setErrorMessage(`Successfully updated ${returnedPerson.name}'s, phone number.`);
+                        setTimeout(() => {
+                            setErrorMessage(null);
+                        }, 5000);
+                    })
+                    .catch((error) => {
+                        setErrorMessage(`Cannot access ${existingPerson.name}'s data from the server. Error ${error}`);
+                        console.log("HTTP request error caught");
+                        setTimeout(() => {
+                            setErrorMessage(null);
+                        }, 5000);
+                        setPersons(persons.filter((person) => person.id !== existingPerson.id));
+                    });
             }
         } else {
             personService.create(personObject).then((returnedPerson) => {
