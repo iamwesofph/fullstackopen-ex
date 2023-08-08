@@ -27,12 +27,17 @@ const PersonForm = ({ newName, newNumber, handleChangeName, handleChangeNumber, 
     );
 };
 
-const Persons = ({ persons, search }) => {
+const Persons = ({ persons, search, handleDelete }) => {
     const personsToShow = persons.filter((person) => person.name.includes(search));
     return (
         <ul>
             {personsToShow.map((person, index) => {
-                return <li key={index}>{`${person.name} ${person.number}`}</li>;
+                return (
+                    <li key={index}>
+                        {`${person.name} ${person.number}`}
+                        <button onClick={() => handleDelete(person.id)}>Delete</button>
+                    </li>
+                );
             })}
         </ul>
     );
@@ -53,7 +58,6 @@ const App = () => {
     const [search, setSearch] = useState("");
 
     useEffect(() => {
-        console.log("effect");
         axios.get("http://localhost:3001/persons").then((response) => {
             setPersons(response.data);
         });
@@ -85,6 +89,16 @@ const App = () => {
         setSearch(event.target.value);
     };
 
+    const handleDelete = (id) => {
+        if (window.confirm("Are you sure you want to delete user?") === true) {
+            personService.remove(id).then((deletedPerson) => {
+                const updatedPersons = persons.filter((person) => person.id !== id);
+                setPersons(updatedPersons);
+                console.log(`Deleted ${deletedPerson}`);
+            });
+        }
+    };
+
     // const handleSubmit = (event) => {
     //     event.preventDefault();
     //     const newPerson = {
@@ -109,7 +123,7 @@ const App = () => {
             <Filter handleChangeSearch={handleChangeSearch} search={search} />
             <PersonForm newName={newName} newNumber={newNumber} handleChangeName={handleChangeName} handleChangeNumber={handleChangeNumber} addPerson={addPerson} />
             <h2>Numbers</h2>
-            <Persons persons={persons} search={search} />
+            <Persons persons={persons} search={search} handleDelete={handleDelete} />
         </div>
     );
 };
