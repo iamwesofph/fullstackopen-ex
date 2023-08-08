@@ -20,6 +20,10 @@ const App = () => {
         setSearch(event.target.value);
     };
 
+    const handleViewCountry = (countryName) => {
+        setSearch(countryName);
+    };
+
     const countriesToShow = countries.filter((country) => country.name.common.toLowerCase().includes(search.toLowerCase()));
     const len = countriesToShow.length;
 
@@ -33,7 +37,9 @@ const App = () => {
             {len <= 10 && len > 1 && (
                 <ul>
                     {countriesToShow.map((country, index) => (
-                        <li key={index}>{country.name.common}</li>
+                        <li key={index}>
+                            {country.name.common} <button onClick={() => handleViewCountry(country.name.common)}>View</button>
+                        </li>
                     ))}
                 </ul>
             )}
