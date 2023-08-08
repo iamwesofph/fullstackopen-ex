@@ -2,6 +2,15 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import personService from "./services/persons";
+import "./index.css";
+
+const Notification = ({ message }) => {
+    if (message === null) {
+        return null;
+    }
+
+    return <div className="error">{message}</div>;
+};
 
 const Filter = ({ handleChangeSearch, search }) => {
     return (
@@ -49,6 +58,7 @@ const App = () => {
     const [newName, setNewName] = useState("");
     const [newNumber, setNewNumber] = useState("");
     const [search, setSearch] = useState("");
+    const [errorMessage, setErrorMessage] = useState(null);
 
     useEffect(() => {
         axios.get("http://localhost:3001/persons").then((response) => {
@@ -69,6 +79,10 @@ const App = () => {
             if (window.confirm(`${newName} is already added to phonebook, replace old number with a new one?`) === true) {
                 personService.update(existingPerson.id, personObject).then((returnedPerson) => {
                     setPersons(persons.map((person) => (person.id !== existingPerson.id ? person : returnedPerson)));
+                    setErrorMessage(`Successfully updated ${returnedPerson.name}'s, phone number.`);
+                    setTimeout(() => {
+                        setErrorMessage(null);
+                    }, 5000);
                 });
             }
         } else {
@@ -76,6 +90,10 @@ const App = () => {
                 setPersons(persons.concat(returnedPerson));
                 setNewName("");
                 setNewNumber("");
+                setErrorMessage(`Successfully added ${returnedPerson.name}`);
+                setTimeout(() => {
+                    setErrorMessage(null);
+                }, 5000);
             });
         }
     };
@@ -104,6 +122,7 @@ const App = () => {
 
     return (
         <div>
+            <Notification message={errorMessage} />
             <h2>Phonebook</h2>
             <Filter handleChangeSearch={handleChangeSearch} search={search} />
             <PersonForm newName={newName} newNumber={newNumber} handleChangeName={handleChangeName} handleChangeNumber={handleChangeNumber} addPerson={addPerson} />
