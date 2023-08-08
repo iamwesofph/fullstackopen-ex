@@ -29,6 +29,11 @@
             "name": "Olive",
             "number": "9999",
             "id": 6
+        },
+        {
+            "name": "Wes",
+            "number": "21",
+            "id": 7
         }
     ],
     "pokemons": [

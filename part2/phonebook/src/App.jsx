@@ -35,20 +35,13 @@ const Persons = ({ persons, search, handleDelete }) => {
                 return (
                     <li key={index}>
                         {`${person.name} ${person.number}`}
-                        <button onClick={() => handleDelete(person.id)}>Delete</button>
+                        <button onClick={() => handleDelete(person)}>Delete</button>
                     </li>
                 );
             })}
         </ul>
     );
 };
-
-// const initialPersons = [
-//     { name: "Arto Hellas", number: "040-123456", id: 1 },
-//     { name: "Ada Lovelace", number: "39-44-5323523", id: 2 },
-//     { name: "Dan Abramov", number: "12-43-234345", id: 3 },
-//     { name: "Mary Poppendieck", number: "39-23-6423122", id: 4 },
-// ];
 
 const App = () => {
     // const [persons, setPersons] = useState(initialPersons);
@@ -65,16 +58,26 @@ const App = () => {
 
     const addPerson = (event) => {
         event.preventDefault();
+
         const personObject = {
             name: newName,
             number: newNumber,
         };
 
-        personService.create(personObject).then((returnedPerson) => {
-            setPersons(persons.concat(returnedPerson));
-            setNewName("");
-            setNewNumber("");
-        });
+        const existingPerson = persons.find((person) => person.name === newName);
+        if (existingPerson) {
+            if (window.confirm(`${newName} is already added to phonebook, replace old number with a new one?`) === true) {
+                personService.update(existingPerson.id, personObject).then((returnedPerson) => {
+                    setPersons(persons.map((person) => (person.id !== existingPerson.id ? person : returnedPerson)));
+                });
+            }
+        } else {
+            personService.create(personObject).then((returnedPerson) => {
+                setPersons(persons.concat(returnedPerson));
+                setNewName("");
+                setNewNumber("");
+            });
+        }
     };
 
     const handleChangeName = (event) => {
@@ -89,33 +92,15 @@ const App = () => {
         setSearch(event.target.value);
     };
 
-    const handleDelete = (id) => {
-        if (window.confirm("Are you sure you want to delete user?") === true) {
-            personService.remove(id).then((deletedPerson) => {
-                const updatedPersons = persons.filter((person) => person.id !== id);
+    const handleDelete = (person) => {
+        if (window.confirm(`Are you sure you want to delete user ${person.name}?`) === true) {
+            personService.remove(person.id).then((deletedPerson) => {
+                const updatedPersons = persons.filter((updatedPerson) => updatedPerson.id !== person.id);
                 setPersons(updatedPersons);
                 console.log(`Deleted ${deletedPerson}`);
             });
         }
     };
-
-    // const handleSubmit = (event) => {
-    //     event.preventDefault();
-    //     const newPerson = {
-    //         name: newName,
-    //         number: newNumber,
-    //     };
-
-    //     const existingPerson = persons.find((person) => person.name === newPerson.name);
-
-    //     if (existingPerson) {
-    //         alert(`${newName} is already added to phonebook`);
-    //     } else {
-    //         setPersons([...persons, newPerson]);
-    //         setNewName("");
-    //         setNewNumber("");
-    //     }
-    // };
 
     return (
         <div>
