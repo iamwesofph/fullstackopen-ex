@@ -2,8 +2,11 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 const App = () => {
+    const API_KEY = import.meta.env.VITE_API_KEY;
     const [countries, setCountries] = useState([]);
     const [search, setSearch] = useState("");
+    const [weather, setWeather] = useState(null);
+    let weatherIconUrl = "";
 
     useEffect(() => {
         axios
@@ -26,6 +29,21 @@ const App = () => {
 
     const countriesToShow = countries.filter((country) => country.name.common.toLowerCase().includes(search.toLowerCase()));
     const len = countriesToShow.length;
+
+    if (len === 1) {
+        const country = countriesToShow[0];
+        const lat = country.capitalInfo.latlng[0];
+        const lon = country.capitalInfo.latlng[1];
+        const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}`;
+        axios.get(url).then(({ data }) => {
+            setWeather(data);
+        });
+    }
+
+    if (weather) {
+        const icon = weather.weather[0].icon;
+        weatherIconUrl = `http://openweathermap.org/img/wn/${icon}@2x.png`;
+    }
 
     return (
         <>
@@ -74,6 +92,15 @@ const App = () => {
                                 </ul>
 
                                 <img src={country.flags.png} alt="flag" />
+
+                                {weather && (
+                                    <>
+                                        <h2>Weather in {country.capital}</h2>
+                                        <p>temperature {weather.main.temp} Celsius</p>
+                                        <img src={weatherIconUrl} width="80" />
+                                        <p>wind {weather.wind.speed} m/s</p>
+                                    </>
+                                )}
                             </div>
                         );
                     })}

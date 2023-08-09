@@ -1,5 +1,5 @@
 import axios from "axios";
-const baseUrl = "http://localhost:3001/persons";
+const baseUrl = "https://studies.cs.helsinki.fi/restcountries/api";
 
 const getAll = () => {
     const request = axios.get(baseUrl);
@@ -31,3 +31,5 @@ export default {
     update,
     remove,
 };
+
+// &appid=9a2dfab6d7a7bce0d71de09843d88c93
