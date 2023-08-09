@@ -18,7 +18,11 @@ const update = (id, newObject) => {
 
 const remove = (id) => {
     const request = axios.delete(`${baseUrl}/${id}`);
-    return request.then((response) => response.data);
+    return request.then((response) => {
+        console.log("Status Code:", response.status); // Logging the status code
+        console.log("Data:", response.data); // Logging the status code
+        return response.data;
+    });
 };
 
 export default {

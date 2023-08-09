@@ -88,7 +88,7 @@ const App = () => {
                     })
                     .catch((error) => {
                         setErrorMessage(`Cannot access ${existingPerson.name}'s data from the server. Error ${error}`);
-                        console.log("HTTP request error caught");
+                        console.log("HTTP request error");
                         setTimeout(() => {
                             setErrorMessage(null);
                         }, 5000);
@@ -122,10 +122,10 @@ const App = () => {
 
     const handleDelete = (person) => {
         if (window.confirm(`Are you sure you want to delete user ${person.name}?`) === true) {
-            personService.remove(person.id).then((deletedPerson) => {
+            personService.remove(person.id).then((res) => {
                 const updatedPersons = persons.filter((updatedPerson) => updatedPerson.id !== person.id);
                 setPersons(updatedPersons);
-                console.log(`Deleted ${deletedPerson}`);
+                console.log(`Deleted ${res}`);
             });
         }
     };
