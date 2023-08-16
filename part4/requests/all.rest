@@ -1,0 +1,45 @@
+GET http://localhost:3003/api/blogs
+
+###
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+    {
+        "title": "The Power of Positive Thinking",
+        "author": "Jane Doe",
+        "url": "https://example.com/blog/power-positive-thinking",
+        "likes": 45
+    },
+
+###
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+    {
+        "title": "Mastering Time Management",
+        "author": "Michael Johnson",
+        "url": "https://example.com/blog/mastering-time-management",
+        "likes": 33
+    }
+
+###
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+    {
+        "title": "Introduction to Machine Learning",
+        "author": "Emily Williams",
+        "url": "https://example.com/blog/intro-to-machine-learning",
+        "likes": 68
+    }
+
+###
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+    {
+        "title": "Healthy Eating Habits for a Busy Lifestyle",
+        "author": "Alex Carter",
+        "url": "https://example.com/blog/healthy-eating-habits",
+        "likes": 12
+    }
