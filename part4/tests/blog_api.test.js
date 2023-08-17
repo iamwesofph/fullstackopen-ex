@@ -33,6 +33,31 @@ test("unique identifier is id", async () => {
     }
 });
 
+test("creating a new blog post", async () => {
+    const newBlog = {
+        title: "Test Blog",
+        author: "Test Author",
+        url: "https://testblog.com",
+        likes: 10,
+    };
+
+    // Get initial count of blogs
+    const initialBlogs = await Blog.find({});
+
+    // Make POST request to create a new blog
+    await api.post("/api/blogs").send(newBlog).expect(201);
+
+    // Get updated count of blogs
+    const updatedBlogs = await Blog.find({});
+
+    // Check if the total number of blogs is increased by one
+    expect(updatedBlogs).toHaveLength(initialBlogs.length + 1);
+
+    // Check if the content of the new blog is saved correctly
+    const savedBlog = updatedBlogs.find((blog) => blog.title === newBlog.title && blog.author === newBlog.author);
+    expect(savedBlog).toBeDefined();
+});
+
 afterAll(async () => {
     await mongoose.connection.close();
 });
