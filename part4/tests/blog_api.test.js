@@ -71,6 +71,24 @@ test("likes property defaults to 0 when missing from request", async () => {
     expect(savedBlog.likes).toBe(0);
 });
 
+test("responds with 400 Bad Request if title is missing", async () => {
+    const newBlog = {
+        author: "Test Author",
+        url: "https://testblog.com",
+    };
+
+    await api.post("/api/blogs").send(newBlog).expect(400);
+});
+
+test("responds with 400 Bad Request if url is missing", async () => {
+    const newBlog = {
+        title: "Test Blog",
+        author: "Test Author",
+    };
+
+    await api.post("/api/blogs").send(newBlog).expect(400);
+});
+
 afterAll(async () => {
     await mongoose.connection.close();
 });
