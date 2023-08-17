@@ -7,8 +7,7 @@ Content-Type: application/json
     {
         "title": "The Power of Positive Thinking",
         "author": "Jane Doe",
-        "url": "https://example.com/blog/power-positive-thinking",
-        "likes": 45
+        "url": "https://example.com/blog/power-positive-thinking"
     }
 
 ###

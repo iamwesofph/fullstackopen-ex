@@ -58,6 +58,19 @@ test("creating a new blog post", async () => {
     expect(savedBlog).toBeDefined();
 });
 
+test("likes property defaults to 0 when missing from request", async () => {
+    const newBlog = {
+        title: "Test Blog",
+        author: "Test Author",
+        url: "https://testblog.com",
+    };
+
+    const response = await api.post("/api/blogs").send(newBlog).expect(201);
+    const savedBlog = response.body;
+
+    expect(savedBlog.likes).toBe(0);
+});
+
 afterAll(async () => {
     await mongoose.connection.close();
 });
