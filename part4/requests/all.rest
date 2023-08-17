@@ -42,3 +42,18 @@ Content-Type: application/json
         "url": "https://example.com/blog/healthy-eating-habits",
         "likes": 12
     }
+
+###
+DELETE http://localhost:3003/api/blogs/64de068604e8bd745d5c7452
+
+###
+GET http://localhost:3003/api/blogs
+
+###
+PUT http://localhost:3003/api/blogs/64de05e3daad8af0623fca49
+Content-Type: application/json
+    
+    {
+        "author": "nobody",
+       "likes": 9999
+    }

@@ -89,7 +89,7 @@ test("responds with 400 Bad Request if url is missing", async () => {
     await api.post("/api/blogs").send(newBlog).expect(400);
 });
 
-describe("deletion of a blog", () => {
+describe("Deletion of a blog", () => {
     test("succeeds with status code 204 if id is valid", async () => {
         const blogsAtStart = await helper.blogsInDb();
         const blogToDelete = blogsAtStart[0];
@@ -105,6 +105,38 @@ describe("deletion of a blog", () => {
         const titles = blogsAtEnd.map((r) => r.title);
 
         expect(titles).not.toContain(blogToDelete.title);
+    });
+});
+
+describe("Updating a blog", () => {
+    test("updating a blog with valid id", async () => {
+        const blogsAtStart = await helper.blogsInDb();
+        const blogToUpdate = blogsAtStart[0];
+
+        const updatedBlogData = {
+            title: "Updated Title",
+            author: "Updated Author",
+            url: "https://updatedblog.com",
+            likes: 100,
+        };
+
+        const response = await api.put(`/api/blogs/${blogToUpdate.id}`).send(updatedBlogData).expect(200);
+
+        const updatedBlog = response.body;
+
+        expect(updatedBlog.title).toBe(updatedBlogData.title);
+        expect(updatedBlog.author).toBe(updatedBlogData.author);
+        expect(updatedBlog.url).toBe(updatedBlogData.url);
+        expect(updatedBlog.likes).toBe(updatedBlogData.likes);
+
+        const blogsAtEnd = await helper.blogsInDb();
+        const updatedBlogInDb = blogsAtEnd.find((blog) => blog.id === blogToUpdate.id);
+
+        expect(updatedBlogInDb).toBeDefined();
+        expect(updatedBlogInDb.title).toBe(updatedBlogData.title);
+        expect(updatedBlogInDb.author).toBe(updatedBlogData.author);
+        expect(updatedBlogInDb.url).toBe(updatedBlogData.url);
+        expect(updatedBlogInDb.likes).toBe(updatedBlogData.likes);
     });
 });
 
