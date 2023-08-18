@@ -94,9 +94,7 @@ describe("Deletion of a blog", () => {
         const blogsAtStart = await helper.blogsInDb();
         const blogToDelete = blogsAtStart[0];
 
-        console.log("ID to Delete:", blogToDelete.id);
         await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204);
-        console.log("Delete Request Sent");
 
         const blogsAtEnd = await helper.blogsInDb();
 
