@@ -1,6 +1,7 @@
 ###
 GET http://localhost:3003/api/blogs
 
+###
 GET http://localhost:3003/api/blogs/info
 
 ###
@@ -47,7 +48,9 @@ Content-Type: application/json
     }
 
 ###
-DELETE http://localhost:3003/api/blogs/64e4a9ddbf110317702bcb81
+DELETE http://localhost:3003/api/blogs/64e499db9457a7529745ac89
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjY0ZGYxZDAwOWFjNjZlMzBkZmEwNGNkNiIsImlhdCI6MTY5MjcxMDU3NH0.lT5BqsPrNvwc3fXccRSBawORnWkAxXa7sy_rd8S5yik
+
 
 ###
 GET http://localhost:3003/api/blogs
@@ -73,3 +76,15 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Indlc
         "url": "https://example.com/blog/healthy-eating-habits",
         "likes": 12
     }
+
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjY0ZGYxZDAwOWFjNjZlMzBkZmEwNGNkNiIsImlhdCI6MTY5MjcxMzU1OX0.ge0x3qfi-11JrxOVL4K9la92k66HuHq4WFwNwqe3brs
+
+    {
+        "title": "Art of War",
+        "author": "Sun Tzu",
+        "url": "https://artofwar.com",
+        "likes": 2121
+    }
+
