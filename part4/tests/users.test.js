@@ -59,6 +59,50 @@ describe("when there is initially one user in db", () => {
         const usersAtEnd = await helper.usersInDb();
         expect(usersAtEnd).toEqual(usersAtStart);
     });
+
+    test("username must be given", async () => {
+        const newUser = {
+            name: "new name",
+            password: "sss",
+        };
+
+        await api
+            .post("/api/users")
+            .send(newUser)
+            .expect(400)
+            .expect("Content-Type", /application\/json/);
+    });
+
+    test("password must be given", async () => {
+        const newUser = {
+            username: "new username",
+            name: "new name",
+        };
+
+        await api
+            .post("/api/users")
+            .send(newUser)
+            .expect(400)
+            .expect("Content-Type", /application\/json/);
+    });
+
+    test("invalid users are not created", async () => {
+        const newUser = {
+            username: "we",
+            name: "wes",
+            password: "21",
+        };
+
+        const initialUsers = await User.find({});
+        await api
+            .post("/api/users")
+            .send(newUser)
+            .expect(400)
+            .expect("Content-Type", /application\/json/);
+        const updatedUsers = await User.find({});
+
+        expect(updatedUsers).toHaveLength(initialUsers.length);
+    });
 });
 
 afterAll(async () => {
