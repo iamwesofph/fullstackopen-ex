@@ -15,12 +15,10 @@ blogsRouter.get("/", async (request, response) => {
 
 blogsRouter.post("/", middleware.userExtractor, async (request, response) => {
     const body = request.body;
-    console.log(request.user.id);
-    // console.log("HELLO");
     const user = request.user;
 
-    if (!body.title || !body.url) {
-        return response.status(400).json({ error: "Title and URL are required" });
+    if (!body.title || !body.url || !body.author) {
+        return response.status(400).json({ error: "Title, URL and Author are required" });
     }
 
     const blog = new Blog({
@@ -38,9 +36,18 @@ blogsRouter.post("/", middleware.userExtractor, async (request, response) => {
     response.status(201).json(savedBlog);
 });
 
-blogsRouter.delete("/:id", async (request, response) => {
+blogsRouter.get("/:id", async (request, response) => {
     const blog = await Blog.findById(request.params.id);
-    if (blog.user.toString() === request.user.toString()) {
+    if (blog) {
+        response.json(blog);
+    } else {
+        response.status(404).end();
+    }
+});
+
+blogsRouter.delete("/:id", middleware.userExtractor, async (request, response) => {
+    const blog = await Blog.findById(request.params.id);
+    if (blog.user.toString() === request.user.id.toString()) {
         await Blog.findByIdAndRemove(request.params.id);
         response.status(204).end();
     } else {
